@@ -22,7 +22,7 @@ namespace Praktikum_week_13
         MySqlCommand sqlCommand;
         MySqlDataAdapter sqlAdapter;
         String sqlQuery;
-        DataTable dtpremier_league = new DataTable();
+        DataTable dtPemain_premiere = new DataTable();
         int PosisiSekarang = 0;
 
         private void Form1_Load(object sender, EventArgs e)
@@ -30,26 +30,34 @@ namespace Praktikum_week_13
             sqlQuery = "SELECT p.player_id, p.player_name, p.birthdate, n.nation AS 'Nationality', t.team_name AS 'Team Member', p.team_number FROM player p LEFT JOIN nationality n ON p.nationality_id = n.nationality_id LEFT JOIN team t ON p.team_id = t.team_id";
             sqlCommand = new MySqlCommand(sqlQuery, sqlConnect);
             sqlAdapter = new MySqlDataAdapter(sqlCommand);
-            sqlAdapter.Fill(dtpremier_league);
+            sqlAdapter.Fill(dtPemain_premiere);
             IsiDataPemain(0);
         }
 
         private void Btn_Save_Click(object sender, EventArgs e)
         {
-            
+            sqlQuery = "UPDATE player SET player_name = '" + Txt_PlayerName.Text + "',  birthdate = '" + DT_DateTime.Text + "', nationality_id = '" + CB_Nationality.Text + "', team_id = '" + CB_Team.Text + "', team_number = '" + NUD_TeamN.Text + "' WHERE player_id = '" + Txt_PlayerID.Text + "';'";
+            sqlConnect.Open();
+            sqlCommand = new MySqlCommand(sqlQuery, sqlConnect);
+            sqlCommand.ExecuteNonQuery();
+            sqlConnect.Close();
         }
 
         public void IsiDataPemain(int Posisi)
         {
 
-            Txt_PlayerID.Text = dtpremier_league.Rows[Posisi][0].ToString();
-            Txt_PlayerName.Text = dtpremier_league.Rows[Posisi][1].ToString();
-            DT_DateTime.Text = dtpremier_league.Rows[Posisi][2].ToString();
-            CB_Nationality.DataSource = dtpremier_league; 
+            Txt_PlayerID.Text = dtPemain_premiere.Rows[Posisi][0].ToString();
+            Txt_PlayerName.Text = dtPemain_premiere.Rows[Posisi][1].ToString();
+            DT_DateTime.Text = dtPemain_premiere.Rows[Posisi][2].ToString();
+            CB_Nationality.DataSource = dtPemain_premiere; 
             CB_Nationality.DisplayMember = "Nationality";
-            CB_Team.DataSource = dtpremier_league; 
+
+            CB_Nationality.Text = dtPemain_premiere.Rows[Posisi][3].ToString();
+
+            CB_Team.DataSource = dtPemain_premiere; 
             CB_Team.DisplayMember = "Team Member";
-            NUD_TeamN.Text = dtpremier_league.Rows[Posisi][5].ToString();
+            CB_Team.Text = dtPemain_premiere.Rows[Posisi][4].ToString();
+            NUD_TeamN.Text = dtPemain_premiere.Rows[Posisi][5].ToString();
             PosisiSekarang = Posisi;
         }
 
@@ -74,7 +82,7 @@ namespace Praktikum_week_13
 
         private void Btn_Next_Click(object sender, EventArgs e)
         {
-            if (PosisiSekarang < dtpremier_league.Rows.Count - 1)
+            if (PosisiSekarang < dtPemain_premiere.Rows.Count - 1)
             {
                 PosisiSekarang++;
                 IsiDataPemain(PosisiSekarang);
@@ -87,7 +95,7 @@ namespace Praktikum_week_13
 
         private void Btn_Last_Click(object sender, EventArgs e)
         {
-            IsiDataPemain(dtpremier_league.Rows.Count - 1);
+            IsiDataPemain(dtPemain_premiere.Rows.Count - 1);
         }
 
         private void Btn_Cancel_Click(object sender, EventArgs e)
