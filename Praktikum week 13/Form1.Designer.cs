@@ -170,6 +170,7 @@
             // 
             // DT_DateTime
             // 
+            this.DT_DateTime.CustomFormat = "";
             this.DT_DateTime.Location = new System.Drawing.Point(92, 102);
             this.DT_DateTime.Name = "DT_DateTime";
             this.DT_DateTime.Size = new System.Drawing.Size(200, 20);
